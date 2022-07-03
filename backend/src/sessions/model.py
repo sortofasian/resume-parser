@@ -1,12 +1,9 @@
-from ..app import db
+from src.providers.mongodb import db
 
 from nanoid import generate as nanoid
 from datetime import timedelta
 import jwt
 
-
-# Telling pylance to shut up for a bit
-jwt = jwt.encode({"test": nanoid()})
 
 session_expiry = timedelta(days=3).seconds
 sessions = db["sessions"]

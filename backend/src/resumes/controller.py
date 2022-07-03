@@ -1,9 +1,9 @@
-from ..models import Resumes
+from . import model
 
 
 def create(uid: str):
-    resumes = Resumes(uid=uid)
-    return resumes.add_resume
+    resumes = model.Resumes(uid=uid)
+    return resumes.add()
 
 
 def read(uid: str, rid: str):

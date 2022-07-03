@@ -1,4 +1,7 @@
-def config(db_options: dict):
+import json
+
+
+def config_mongodb(db_options: dict):
     expected_options = ["srv", "user", "password", "address", "db"]
 
     # Config validity check
@@ -29,3 +32,18 @@ def config(db_options: dict):
             db_options["db"],
         )
     }
+
+
+def config_flask(options: dict):
+    return options
+
+
+with open("config.json", "r", encoding="utf8") as f:
+    options = json.load(f)
+
+for key in options:
+    if key == "mongodb":
+        mongodb_config = config_mongodb(options["mongodb"])
+
+    if key == "flask":
+        flask_config = config_flask(options["flask"])

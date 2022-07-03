@@ -1,4 +1,4 @@
-from ..app import db
+from src.providers.mongodb import db
 
 from typing import IO
 

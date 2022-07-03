@@ -1,4 +1,4 @@
-from ..app import db
+from src.providers.mongodb import db
 
 from nanoid import generate as nanoid
 from datetime import datetime

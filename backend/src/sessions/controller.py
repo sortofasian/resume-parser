@@ -1,8 +1,8 @@
-from ..models import Session
+from . import model
 
 
 def create(uid: str):
-    session = Session(uid)
+    session = model.Session(uid)
     return session
 
 

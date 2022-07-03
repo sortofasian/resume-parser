@@ -1,8 +1,8 @@
-from ..models import User
+from . import model
 
 
 def create(user: dict):
-    new_user = User()
+    new_user = model.User()
     new_user.update_user(
         email=user["email"],
         password=user["password"],
@@ -13,12 +13,12 @@ def create(user: dict):
 
 
 def read(uid):
-    user = User(uid)
+    user = model.User(uid)
     return user.get_user()
 
 
 def update(uid, update):
-    user = User(uid)
+    user = model.User(uid)
     return user.update()
 
 
