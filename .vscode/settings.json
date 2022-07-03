@@ -5,6 +5,10 @@
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": "./**/.github/workflows/deploy.yml"
     },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true
+    },
 
     //Python
     "python.linting.enabled": true,
@@ -23,8 +27,5 @@
     },
     "[typescriptreact]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "editor.codeActionsOnSave": {
-        "source.fixAll": true
     }
 }

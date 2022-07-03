@@ -1,4 +1,5 @@
 import flask
+
 from src.providers.configs import flask_config
 from src.providers.mongodb import cleanup_mongodb
 from src.providers.routes import add_routes

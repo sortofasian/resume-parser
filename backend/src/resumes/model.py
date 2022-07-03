@@ -1,7 +1,6 @@
-from src.providers.mongodb import db
-
 from typing import IO
 
+from src.providers.mongodb import db
 
 resumes = db["resumes"]
 resumes.create_index("rid", name="rid", unique=True)

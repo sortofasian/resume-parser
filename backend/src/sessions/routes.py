@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from . import controller
+import controller
 
 session_routes = Blueprint("sessions", __name__)
 

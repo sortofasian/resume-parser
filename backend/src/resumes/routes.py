@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from . import controller
+import controller
 
 resume_routes = Blueprint("resumes", __name__)
 

@@ -1,7 +1,5 @@
 import pymongo
-
 from src.providers.configs import mongodb_config
-
 
 try:
     client = pymongo.MongoClient(mongodb_config["connect"])

@@ -1,5 +1,4 @@
 from flask import Flask
-
 from src.resumes.routes import resume_routes
 from src.sessions.routes import session_routes
 from src.users.routes import user_routes

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "resume-parser"
+name = "backend"
 version = "0.1.0"
 description = ""
 authors = ["sortofasian <charliesyvertsen06@icloud.com>"]

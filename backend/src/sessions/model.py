@@ -1,9 +1,8 @@
-from src.providers.mongodb import db
-
-from nanoid import generate as nanoid
 from datetime import timedelta
-import jwt
 
+import jwt
+from nanoid import generate as nanoid
+from src.providers.mongodb import db
 
 session_expiry = timedelta(days=3).seconds
 sessions = db["sessions"]

@@ -1,9 +1,8 @@
-from src.providers.mongodb import db
-
-from nanoid import generate as nanoid
 from datetime import datetime
-import bcrypt
 
+import bcrypt
+from nanoid import generate as nanoid
+from src.providers.mongodb import db
 
 users = db["users"]
 users.create_index("uid", name="uid", unique=True)

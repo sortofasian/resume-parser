@@ -1,4 +1,4 @@
-from . import model
+import model
 
 
 def create(user: dict):
