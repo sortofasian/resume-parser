@@ -1,0 +1,30 @@
+{
+    "files.associations": {
+        "*.toml": "ini"
+    },
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": "./**/.github/workflows/deploy.yml"
+    },
+
+    //Python
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+
+    //JS/TS
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    }
+}
