@@ -16,6 +16,7 @@ bcrypt = "^3.2.2"
 dnspython = "^2.2.1"
 PyJWT = "^2.4.0"
 flake8 = "^4.0.1"
+Flask-Login = "^0.6.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"
