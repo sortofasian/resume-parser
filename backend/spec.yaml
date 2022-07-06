@@ -4,8 +4,11 @@ info:
     version: '0.3'
 
 paths:
+    #Users
     /users:
         get:
+            tags:
+                - Users
             summary: Returns a list of users
             description: Returns a list of users for the admin interface
             parameters:
@@ -29,8 +32,13 @@ paths:
                                 items:
                                     $ref: '#/components/schemas/User'
                 '401':
+                    description: Not authenticated
+                '403':
                     description: Not authorized
+
         post:
+            tags:
+                - Users
             summary: Create new user
             description: Create a new user account
             requestBody:
@@ -48,11 +56,14 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/User'
                 '403':
-                    description: ReCaptcha failed
+                    description: Not authorized
                 '409':
                     description: User exists
+
     /users/{uid}:
         get:
+            tags:
+                - Users
             summary: Returns specific user
             description: Returns a user from their UID
             parameters:
@@ -70,10 +81,15 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/User'
                 '401':
+                    description: Not authenticated
+                '403':
                     description: Not authorized
                 '404':
                     description: User not found
+
         patch:
+            tags:
+                - Users
             summary: Update user info
             description: Send modified user data such as name, password, or email
             parameters:
@@ -90,15 +106,153 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/User'
+                '401':
+                    description: Not authenticated
+                '403':
+                    description: Not authorized
+                '404':
+                    description: User does not exist
 
+    #Resumes
     /resumes/{uid}:
         get:
+            tags:
+                - Resumes
             summary: Get user's resumes
-            definition: Using User ID, find all associated resumes
+            description: Using User ID, find all associated resumes
+            parameters:
+                - name: uid
+                  required: true
+                  in: path
+                  description: Resumes for user id
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Requested resume
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    thumbnail:
+                                        type: string
+                                    rid:
+                                        type: string
+                '401':
+                    description: Not authenticated
+                '403':
+                    description: Not authorized
+                '404':
+                    description: User does not exist
+
+        post:
+            tags:
+                - Resumes
+            summary: Create new resume
+            description: Submit a new resume for parsing
+            requestBody:
+                description: User info for signup
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                filename:
+                                    type: string
+                                file:
+                                    type: string
+            responses:
+                '201':
+                    description: Resume created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Resume'
+                '403':
+                    description: Not authorized
+                '409':
+                    description: Resume is already submitted
+
+    /resumes/{rid}:
+        get:
+            tags:
+                - Resumes
+            summary: Get specific resume
+            description: Get a specific resume by it's unique id
+            parameters:
+                - name: rid
+                  required: true
+                  in: path
+                  description: Resume ID
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Requested resume
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Resume'
+                '401':
+                    description: Not authenticated
+                '403':
+                    description: Not authorized
+                '404':
+                    description: Resume does not exist
+        patch:
+            tags:
+                - Resumes
+            summary: Update resume
+            description: Modify an existing resume
+            parameters:
+                - name: rid
+                  required: true
+                  in: path
+                  description: Resume ID
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Modified successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Resume'
+                '401':
+                    description: Not authenticated
+                '403':
+                    description: Not authorized
+                '404':
+                    description: Resume does not exist
+
     /resumes/search:
         post:
+            tags:
+                - Resumes
             summary: Search for a resume
-            definition: Search for resumes based on various search parameters
+            description: Search for resumes based on various search parameters
+            requestBody:
+                description: Query for a resume
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Query'
+            responses:
+                '200':
+                    description: Query results
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Resume'
+                '401':
+                    description: Not authenticated
+                '403':
+                    description: Not authorized
 
 components:
     schemas:
@@ -113,3 +267,37 @@ components:
                     type: string
                 uid:
                     type: string
+        Resume:
+            type: object
+            properties:
+                uid:
+                    type: string
+                rid:
+                    type: string
+                skills:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Skill'
+                image:
+                    type: string
+        Skill:
+            type: object
+            properties:
+                name:
+                    type: string
+                url:
+                    type: string
+        Query:
+            type: object
+            properties:
+                queryString:
+                    type: string
+                filters:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            name:
+                                type: string
+                            value:
+                                type: string

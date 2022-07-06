@@ -1,4 +1,4 @@
-name: Deploy User Frontend to gh-pages
+name: Deploy
 
 on:
     push:
