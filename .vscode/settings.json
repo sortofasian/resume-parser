@@ -3,7 +3,8 @@
         "*.toml": "ini"
     },
     "yaml.schemas": {
-        "https://json.schemastore.org/github-workflow.json": "./**/.github/workflows/deploy.yml"
+        "https://json.schemastore.org/github-workflow.json": "./**/.github/workflows/deploy.yml",
+        "openapi:v3": "file:///home/charlie/Source/resume-parser/backend/spec.yaml"
     },
     "editor.codeActionsOnSave": {
         "source.fixAll": true,

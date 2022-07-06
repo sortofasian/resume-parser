@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+    title: resume-parser
+    version: '0.3'
+
+paths:
+    /users:
+        get:
+            summary: Returns a list of users
+            description: Returns a list of users for the admin interface
+            parameters:
+                - name: results
+                  in: query
+                  description: Number of users to return
+                  schema:
+                      type: integer
+                - name: page
+                  in: query
+                  description: Page of users to return
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: List of users
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/User'
+                '401':
+                    description: Not authorized
+        post:
+            summary: Create new user
+            description: Create a new user account
+            requestBody:
+                description: User info for signup
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/User'
+            responses:
+                '201':
+                    description: User created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '403':
+                    description: ReCaptcha failed
+                '409':
+                    description: User exists
+    /users/{uid}:
+        get:
+            summary: Returns specific user
+            description: Returns a user from their UID
+            parameters:
+                - name: uid
+                  required: true
+                  in: path
+                  description: User ID to get
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: User
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '401':
+                    description: Not authorized
+                '404':
+                    description: User not found
+        patch:
+            summary: Update user info
+            description: Send modified user data such as name, password, or email
+            parameters:
+                - name: uid
+                  required: true
+                  in: path
+                  description: User ID to modify
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Modified successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+
+    /resumes/{uid}:
+        get:
+            summary: Get user's resumes
+            definition: Using User ID, find all associated resumes
+    /resumes/search:
+        post:
+            summary: Search for a resume
+            definition: Search for resumes based on various search parameters
+
+components:
+    schemas:
+        User:
+            type: object
+            properties:
+                firstName:
+                    type: string
+                lastName:
+                    type: string
+                email:
+                    type: string
+                uid:
+                    type: string

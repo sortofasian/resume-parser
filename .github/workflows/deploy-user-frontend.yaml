@@ -1,0 +1,42 @@
+name: Deploy User Frontend to gh-pages
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        strategy:
+            matrix:
+                node-version: [17.x]
+        defaults:
+            run:
+                working-directory: ./user-frontend
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Patch index.tsx to use HashRouter for Github Pages support
+              run: sed 's/BrowserRouter/HashRouter/' src/index.tsx -i
+
+            - name: Build using yarn script
+              run: |
+                  rm -rf node_modules
+                  yarn install --frozen-lockfile
+                  yarn run build --if-present
+
+            - name: Deploy to gh-pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  cname: resumes.homecrypt.net
+                  publish_dir: ./user-frontend/build
