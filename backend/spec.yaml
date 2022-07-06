@@ -4,13 +4,103 @@ info:
     version: '0.3'
 
 paths:
+    #Login
+    /login:
+        post:
+            operationId: login
+            tags:
+                - Accounts
+            summary: Log into account
+            description: Log into existing user account
+            requestBody:
+                description: Login info
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - password
+                            properties:
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+            responses:
+                '200':
+                    description: Login successful
+                    headers:
+                        Set-Cookie:
+                            schema:
+                                type: string
+                                example: SESSION=1234567890; Path=/; HttpOnly; Secure
+                '401':
+                    description: Invalid credentials
+                '403':
+                    description: Login not allowed
+                '404':
+                    description: User not found
+
+    /register:
+        post:
+            operationId: register
+            tags:
+                - Accounts
+            summary: Create new account
+            description: Create a new user account
+            requestBody:
+                description: User info for signup
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/User'
+            responses:
+                '201':
+                    description: User created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '403':
+                    description: Not authorized
+                '409':
+                    description: User exists
+
+    /reset:
+        post:
+            operationId: reset
+            tags:
+                - Accounts
+            summary: Reset password
+            description: Request to rest user password
+            requestBody:
+                description: Email of user to reset
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+            responses:
+                '202':
+                    description: Request sent
+
     #Users
     /users:
         get:
+            operationId: getUsers
             tags:
                 - Users
             summary: Returns a list of users
             description: Returns a list of users for the admin interface
+            security:
+                - CookieAuth: []
             parameters:
                 - name: results
                   in: query
@@ -36,36 +126,15 @@ paths:
                 '403':
                     description: Not authorized
 
-        post:
-            tags:
-                - Users
-            summary: Create new user
-            description: Create a new user account
-            requestBody:
-                description: User info for signup
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/User'
-            responses:
-                '201':
-                    description: User created
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/User'
-                '403':
-                    description: Not authorized
-                '409':
-                    description: User exists
-
     /users/{uid}:
         get:
+            operationId: getUser
             tags:
                 - Users
             summary: Returns specific user
             description: Returns a user from their UID
+            security:
+                - CookieAuth: []
             parameters:
                 - name: uid
                   required: true
@@ -88,10 +157,13 @@ paths:
                     description: User not found
 
         patch:
+            operationId: updateUser
             tags:
                 - Users
             summary: Update user info
             description: Send modified user data such as name, password, or email
+            security:
+                - CookieAuth: []
             parameters:
                 - name: uid
                   required: true
@@ -116,10 +188,13 @@ paths:
     #Resumes
     /resumes/{uid}:
         get:
+            operationId: getResumes
             tags:
                 - Resumes
             summary: Get user's resumes
             description: Using User ID, find all associated resumes
+            security:
+                - CookieAuth: []
             parameters:
                 - name: uid
                   required: true
@@ -147,10 +222,20 @@ paths:
                     description: User does not exist
 
         post:
+            operationId: createResume
             tags:
                 - Resumes
             summary: Create new resume
             description: Submit a new resume for parsing
+            security:
+                - CookieAuth: []
+            parameters:
+                - name: uid
+                  required: true
+                  in: path
+                  description: User id to associate with resume
+                  schema:
+                      type: string
             requestBody:
                 description: User info for signup
                 required: true
@@ -177,10 +262,13 @@ paths:
 
     /resumes/{rid}:
         get:
+            operationId: getResume
             tags:
                 - Resumes
             summary: Get specific resume
             description: Get a specific resume by it's unique id
+            security:
+                - CookieAuth: []
             parameters:
                 - name: rid
                   required: true
@@ -206,6 +294,8 @@ paths:
                 - Resumes
             summary: Update resume
             description: Modify an existing resume
+            security:
+                - CookieAuth: []
             parameters:
                 - name: rid
                   required: true
@@ -229,10 +319,13 @@ paths:
 
     /resumes/search:
         post:
+            operationId: searchResumes
             tags:
                 - Resumes
             summary: Search for a resume
             description: Search for resumes based on various search parameters
+            security:
+                - CookieAuth: []
             requestBody:
                 description: Query for a resume
                 required: true
@@ -258,9 +351,15 @@ components:
     schemas:
         User:
             type: object
+            required:
+                - firstName
+                - lastName
+                - email
+                - uid
             properties:
                 firstName:
                     type: string
+
                 lastName:
                     type: string
                 email:
@@ -269,6 +368,11 @@ components:
                     type: string
         Resume:
             type: object
+            required:
+                - uid
+                - rid
+                - skills
+                - image
             properties:
                 uid:
                     type: string
@@ -282,6 +386,9 @@ components:
                     type: string
         Skill:
             type: object
+            required:
+                - name
+                - url
             properties:
                 name:
                     type: string
@@ -289,7 +396,11 @@ components:
                     type: string
         Query:
             type: object
+            required:
+                - sort
             properties:
+                sort:
+                    type: string
                 queryString:
                     type: string
                 filters:
@@ -301,3 +412,8 @@ components:
                                 type: string
                             value:
                                 type: string
+    securitySchemes:
+        CookieAuth:
+            type: apiKey
+            in: cookie
+            name: SESSION
