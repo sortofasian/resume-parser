@@ -86,5 +86,11 @@ jobs:
             run:
                 working-directory: ./backend
         steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+
             - name: Not yet set up
               run: echo "work in progress"
